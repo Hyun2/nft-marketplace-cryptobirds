@@ -1,0 +1,38 @@
+mintToken은 tokenId 반환
+mintToken() 호출 => tokenId, price를 받아서 makeMarketItem() 호출
+
+
+
+
+MarketToken 이라는 struct 형태로 판매되는 NFT 관리
+idToMarketToken 이라는 매핑 존재, itemId(uint)가 key, MarketToken(struct)이 value 
+makeMarketItem()은 mint된 NFT를 MarketToken으로 만들어서 idToMarketToken으로 매핑시킨다.
+
+mint된 MarketToken의 seller는 mint한 사용자이고, owner는 아직 판매되지 않았기 때문에 0이다.
+owner는 0으로 존재하지 않지만, 토큰은 판매 시에 전송이 이루어져야 하기 때문에 address(this)에게 transferFrom으로 전송해둔다. (address(this)는 컨트랙트?)
+
+
+
+
+fetchMarketTokens()는 현재 마켓에서 판매 중인 NFT들을 리턴, 리턴 타입은 MarketToken[]
+idToMarketToken을 순회하면서 owner가 0인(소유자가 없는) 토큰들을 모아서 반환
+
+fetchMyNFTs()는 owner가 msg.sender(나)인 NFT들을 리턴, 리턴 타입은 MarketToken[]
+idToMarketToken을 순회하면서 owner가 msg.sender인 토큰들을 모아서 반환
+
+
+
+
+fetchItemsCreated()는 내가(msg.sender)가 민트한 토큰들을 리턴, 리턴 타입은 MarketToken[]
+idToMarketToken을 순회하면서 seller가 나(msg.sender)인 토큰들을 모아서 반환
+
+
+
+
+createMarketSale()은 판매 중인 NFT의 거래를 진행하는 함수이고 nftCA와, itemId를 받아서 처리하고 리턴은 없다. 
+구매자가 보낸 msg.value 이더를 seller 에게 전송하고
+itemId에 해당하는 NFT는 구매자(msg.sender)에게 전송한다.
+
+
+
+
